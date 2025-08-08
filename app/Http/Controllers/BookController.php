@@ -39,7 +39,7 @@ class BookController extends Controller
       $book->categories()->sync($request->input('categories', []));   */
       
       
-      $request->validate([
+      $data = $request->validate([
         'title' => 'required',
         'author' => 'required',
         'desc' => 'required',
@@ -52,11 +52,11 @@ class BookController extends Controller
         'categories.*' => 'exists:categories,id',
       ]);
 
-      $data = $request->input();
-      Book::create($data);
+      
+      $book = Book::create($data);
 
       //to bind with the pivot table
-      $request->categories()->sync($request->input('categories', []));
+      $book->categories()->sync($request->input('categories', []));
       return redirect('/books/index')->with('success', 'Book Created!');
     }
 
