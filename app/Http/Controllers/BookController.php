@@ -94,7 +94,7 @@ class BookController extends Controller
       ]);
 
 
-      $book = Book::create($data);
+      $book->update($data);
 
       $book->categories()->sync($data['categories']);
       return redirect('/books/index')->with('success', 'Book Edited!');
