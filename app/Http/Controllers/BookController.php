@@ -74,5 +74,34 @@ class BookController extends Controller
       return view('/books/updateBook', ['book' => $book], ['categories' => $categories]);
     }
 
+    public function updateBook(Request $request) {
+
+      
+      $book = Book::findOrFail($request->id);
+
+
+      $data = $request->validate([
+        'title' => 'required',
+        'author' => 'required',
+        'desc' => 'required',
+        'price' => 'required',
+        'stock' => 'required|integer|min:1',
+        'page_count' => 'required|integer|min:1',
+        'publisher' => 'required',
+        'cover_image' => 'required',
+        'categories' => 'required|array|min:1',
+        'categories.*' => 'exists:categories,id',
+      ]);
+
+
+      $book = Book::create($data);
+
+      $book->categories()->sync($data['categories']);
+      return redirect('/books/index')->with('success', 'Book Edited!');
+
+
+
+    }
+
     
 }
