@@ -25,32 +25,8 @@ class BookController extends Controller
     }
 
     public function store(Request $request) {
-      /* $validated = $request->validate([
-        'title' => 'required|string|255',
-        'author' => 'required|string|255',
-        'desc' => 'required|string|max:1000',
-        'price' => 'required|integer|min:1',
-        'stock' => 'required|integer|min:1',
-        'page_count' => 'required|integer|min:1',
-        'publisher' => 'required|string|255',
-        'cover_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-        'categories' => 'required|array|min:1',
-        'categories.*' => 'exists:categories,id',
-      ]);
-
-      $book = Book::create([
-        'title' => $validated['title'],
-        'author' => $validated['author'],
-        'desc' => $validated['desc'],
-        'price' => $validated['price'],
-        'stock' => $validated['stock'],
-        'page_count' => $validated['page_count'],
-        'publisher' => $validated['publisher'],
-        'cover_image' => $validated['cover_image'],
-      ]);
-
-      $book->categories()->sync($validated['categories']); */
-      $book = new Book();
+     
+/*       $book = new Book();
       $book->title = $request->title;
       $book->author = $request->author;
       $book->desc = $request->desc;
@@ -60,7 +36,27 @@ class BookController extends Controller
       $book->publisher = $request->publisher;
       $book->cover_image = $request->cover_image;
       $book->save();
-      $book->categories()->sync($request->input('categories', []));      
+      $book->categories()->sync($request->input('categories', []));   */
+      
+      
+      $request->validate([
+        'title' => 'required',
+        'author' => 'required',
+        'desc' => 'required',
+        'price' => 'required',
+        'stock' => 'required|integer|min:1',
+        'page_count' => 'required|integer|min:1',
+        'publisher' => 'required',
+        'cover_image' => 'required',
+        'categories' => 'required|array|min:1',
+        'categories.*' => 'exists:categories,id',
+      ]);
+
+      $data = $request->input();
+      Book::create($data);
+
+      //to bind with the pivot table
+      $request->categories()->sync($request->input('categories', []));
       return redirect('/books/index')->with('success', 'Book Created!');
     }
 
