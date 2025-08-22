@@ -13,7 +13,7 @@
   
 
   <div class="book-details-container">
-      <img src="{{$book['cover_image']}}" alt="book cover" width="400" height="500"><br>
+      <img src="{{$book->cover_image}}" alt="book cover" width="400" height="500"><br>
       <div class="inner-container">
         <p><strong>Author: </strong>{{ $book->author }}</p>
         <p><strong>Description: </strong>{{ $book->desc }}</p> 

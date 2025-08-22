@@ -1,5 +1,5 @@
 <x-header>
-  <form class="w-full max-w-[800px] mx-auto px-5" action="/books/create" method="post">
+  <form class="w-full max-w-[800px] mx-auto px-5" action="/admin/books/create" method="post">
     @csrf
 
     <h1><strong>Create a New Book</strong></h1>

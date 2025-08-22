@@ -121,11 +121,13 @@
       color: black;
     }
 
+
     .nav-links a{
       background-color: lightgoldenrodyellow;
       padding: 10px;
       border-radius: 10px;
       margin: 10px;
+      display: block;
     }
 
     .buttons-grp {
@@ -170,6 +172,7 @@
       align-items: center;
       gap: 5px; 
     }
+    
   </style>
   <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
 
@@ -184,8 +187,11 @@
     <nav>
       <h1>BookNest Online Bookstore</h1>
       <div class="nav-links">
-        <a href="/admin/books/index">All Books</a>
-        <a href="/admin/books/create">Create New Book</a>
+        <a href="/index">All Books</a>
+      </div>
+
+      <div class="nav-links">
+        <a href="/cart/{id}">My Cart</a>
       </div>
 
     </nav>

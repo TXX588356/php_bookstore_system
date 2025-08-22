@@ -57,21 +57,21 @@ class BookController extends Controller
 
       //to bind with the pivot table
       $book->categories()->sync($request->input('categories', []));
-      return redirect('/books/index')->with('success', 'Book Created!');
+      return redirect('/admin/books/index')->with('success', 'Book Created!');
     }
 
     public function destroy($id) {
       $book = Book::findOrFail($id);
       $book->delete();
 
-      return redirect('/books/index')->with('success', 'Book Deleted!');;
+      return redirect('/admin/books/index')->with('success', 'Book Deleted!');;
     }
 
     public function updateBookView($id) {
       $book = Book::find($id);
       $categories = Category::all();
 
-      return view('/books/updateBook', ['book' => $book], ['categories' => $categories]);
+      return view('books.updateBook', ['book' => $book], ['categories' => $categories]);
     }
 
     public function updateBook(Request $request) {
@@ -97,11 +97,14 @@ class BookController extends Controller
       $book->update($data);
 
       $book->categories()->sync($data['categories']);
-      return redirect('/books/index')->with('success', 'Book Edited!');
-
-
-
+      return redirect('/admin/books/index')->with('success', 'Book Edited!');
     }
+
+    public function viewProduct($id) {
+        $book = Book::findOrFail($id);
+        return view('user.show', ["book" => $book]);
+    }
+
 
     
 }

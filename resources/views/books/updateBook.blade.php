@@ -1,6 +1,6 @@
 <x-header>
   <title>Update Book</title>
-  <form class="w-full max-w-[800px] mx-auto px-5" action="/books/updateBook" method="POST">
+  <form class="w-full max-w-[800px] mx-auto px-5" action="/admin/books/updateBook" method="POST">
     @csrf
       <input type="hidden" name="id" value={{ $book->id }}>
       <div class="mb-5">

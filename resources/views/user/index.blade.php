@@ -1,4 +1,4 @@
-<x-header>
+<x-userHeader>
   <h2>Home Page</h2>
   <ul>
     @foreach ($books as $book) 
@@ -9,13 +9,7 @@
 
           <div class="buttons-grp">
             <div class="details-btn">
-                <a href="/admin/books/{{ $book->id }}" >View Details</a>
-            </div>
-            <div class="delete-btn">
-              <a href="/admin/books/delete/{{ $book->id }}" >Delete</a>
-            </div>
-            <div class="update-btn">
-              <a href="/admin/books/update/{{ $book->id }}" >Update</a>
+                <a href="/books/{{ $book->id }}" >View Details</a>
             </div>
           </div>
         </x-card>
@@ -23,7 +17,7 @@
     @endforeach
   </ul>
   {{ $books->links() }}
-</x-header>
+</x-userHeader>
 
 
 
