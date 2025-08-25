@@ -1,5 +1,5 @@
 <div class="card-body">
-    Welcome to YLLoo’s Web Application.
+    Welcome to BookNest BookStore
     @if (session('status'))
         <div class="alert alert-success" role="alert">
             {{ session('status') }}

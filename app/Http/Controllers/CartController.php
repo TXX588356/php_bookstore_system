@@ -7,7 +7,12 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function addCart(Request $request) {
+
+    public function show() {
+        
+    }
+
+    public function add(Request $request) {
         $bookId = $request->input('book_id');
         $quantity = $request->input('quantity');
 

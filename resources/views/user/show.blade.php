@@ -1,6 +1,4 @@
-@php
-    dd(session('cart'));
-@endphp
+
 <x-userHeader>
     <style>
         .book-details-container {
