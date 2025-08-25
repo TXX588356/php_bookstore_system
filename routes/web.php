@@ -47,18 +47,17 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'can:isUser')->group(function () {
   Route::get('/cart/{id}', [UserController::class, 'getCart']);
   Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 });
 
 
-Route::get('/login/admin', [LoginController::class, 'showAdminLoginForm']);
-Route::get('/register/admin', 
-[RegisterController::class,'showAdminRegisterForm']);
+/* Route::get('/login/admin', [LoginController::class, 'showAdminLoginForm']);
+Route::get('/register/admin', [RegisterController::class,'showAdminRegisterForm']);
 
 Route::post('/login/admin', [LoginController::class,'adminLogin']);
-Route::post('/register/admin', [RegisterController::class,'createAdmin']);
+Route::post('/register/admin', [RegisterController::class,'createAdmin']); */
 
 Route::group(['middleware' => 'auth:admin'], function () {
  

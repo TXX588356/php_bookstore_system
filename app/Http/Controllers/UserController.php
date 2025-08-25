@@ -7,13 +7,18 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index() {
+    public function index()
+    {
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            return redirect('/admin/books/index');
+        }
         $books = Book::orderBy('created_at', 'desc')->paginate(5);
 
         return view('user.index', ['books' => $books]);
     }
 
-    public function getCart($user) {
+    public function getCart($user)
+    {
         return view('user.cart', ['user' => $user]);
     }
 }
