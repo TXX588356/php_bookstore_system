@@ -100,10 +100,7 @@ class BookController extends Controller
       return redirect('/admin/books/index')->with('success', 'Book Edited!');
     }
 
-    public function viewProduct($id) {
-        $book = Book::findOrFail($id);
-        return view('user.show', ["book" => $book]);
-    }
+    
 
 
     
