@@ -38,7 +38,7 @@ Route::middleware('can:isAdmin')->group(function() {
 
 
 //Route::get('/index', [UserController::class, 'index']);
-Route::get('/books/{id}', [BookController::class, 'viewProduct']);
+
 
 
 
@@ -50,6 +50,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::middleware('auth', 'can:isUser')->group(function () {
   Route::get('/cart/{id}', [UserController::class, 'getCart']);
   Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+  Route::get('/books/{id}', [BookController::class, 'viewProduct']);
 });
 
 
