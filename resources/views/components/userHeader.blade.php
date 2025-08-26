@@ -186,6 +186,10 @@
     @if (session('success'))
         <div id="flash" class="p-4 text-center bg-green-50 text-green-500 font-bold">{{ session('success') }}</div>
     @endif
+    
+    @if(session('fail'))
+        <div class="alert alert-danger">{{ session('fail') }}</div>
+    @endif
     <header>
         <nav>
             
@@ -214,7 +218,7 @@
             </div>
 
             <div class="nav-links">
-                <a href="/cart/{id}">My Cart</a>
+                <a href="/cart">My Cart</a>
             </div>
 
         </nav>

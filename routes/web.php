@@ -31,8 +31,9 @@ Auth::routes();
 
 
 Route::middleware('auth', 'can:isUser')->group(function () {
-  Route::get('/cart/{id}', [UserController::class, 'getCart']);
+  Route::get('/cart', [CartController::class, 'show']);
   Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+  Route::post('/checkout', [OrderController::class, 'showCheckoutPage']);
   
 });
 
