@@ -1,29 +1,45 @@
 <x-header>
-  <h2>Home Page</h2>
-  <ul>
-    @foreach ($books as $book) 
-      <li>
-        <x-card href="/books/{{ $book['id'] }}">
-          <h3 style="font-weight:bold">{{ $book['title'] }}</h3>
-          <img src="{{$book['cover_image']}}" alt="book cover" width="150" height="220"><br>
+    <h2>Home Page</h2>
+    <form action="/search" method="GET">
+        <input type="text" name="search" required placeholder="Find books by title or description" size="80" />
+        <button type="submit"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Search</button>
+    </form>
+    <br>
+    <p>Search by Category</p>
+    <ul>
+      @foreach($categories as $category)
+        <li style="display:inline-block">
+          <a class="category-link" href="/categorySearch?categorySearch={{ $category->name }}">| {{ $category->name }}</a>
+        </li>
+      @endforeach
+    </ul>
 
-          <div class="buttons-grp">
-            <div class="details-btn">
-                <a href="/admin/books/{{ $book->id }}" >View Details</a>
-            </div>
-            <div class="delete-btn">
-              <a href="/admin/books/delete/{{ $book->id }}" >Delete</a>
-            </div>
-            <div class="update-btn">
-              <a href="/admin/books/update/{{ $book->id }}" >Update</a>
-            </div>
-          </div>
-        </x-card>
-      </li>
-    @endforeach
-  </ul>
-  {{ $books->links() }}
+    <ul>
+        @if ($books->isEmpty())
+            <p>No result found.</p>
+        @else
+            @foreach ($books as $book)
+                <li>
+                    <x-card href="/books/{{ $book['id'] }}">
+                        <h3 style="font-weight:bold">{{ $book['title'] }}</h3>
+                        <img src="{{ $book['cover_image'] }}" alt="book cover" width="150" height="220"><br>
+
+                        <div class="buttons-grp">
+                            <div class="details-btn">
+                                <a href="/admin/books/{{ $book->id }}">View Details</a>
+                            </div>
+                            <div class="delete-btn">
+                                <a href="/admin/books/delete/{{ $book->id }}">Delete</a>
+                            </div>
+                            <div class="update-btn">
+                                <a href="/admin/books/update/{{ $book->id }}">Update</a>
+                            </div>
+                        </div>
+                    </x-card>
+                </li>
+            @endforeach
+          @endif
+    </ul>
+    {{ $books->links() }}
 </x-header>
-
-
-
