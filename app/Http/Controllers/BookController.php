@@ -10,8 +10,9 @@ class BookController extends Controller
 {
     public function index() {
       $books = Book::orderBy('created_at', 'desc')->paginate(5);
+      $categories = Category::all();
 
-      return view('books.index', ["books" => $books]);
+      return view('books.index', compact('books', 'categories'));
     }
 
     public function show($id) {
@@ -99,6 +100,8 @@ class BookController extends Controller
       $book->categories()->sync($data['categories']);
       return redirect('/admin/books/index')->with('success', 'Book Edited!');
     }
+
+    
 
     
 
