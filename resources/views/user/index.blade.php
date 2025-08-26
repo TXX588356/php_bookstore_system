@@ -13,8 +13,11 @@
         </li>
       @endforeach
     </ul>
-    
+
     <ul>
+      @if ($books->isEmpty())
+            <p>No result found.</p>
+      @endif
         @foreach ($books as $book)
             <li>
                 <x-card href="/books/{{ $book['id'] }}">
