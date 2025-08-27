@@ -59,19 +59,15 @@
     @else
     <ul style="margin-bottom: 60px;">
         @foreach ($cartItems as $cartItem) 
-        @php
-            $itemAmount = $cartItem->book->price * $cartItem->quantity;
-        @endphp
+            @php
+                $itemAmount = $cartItem->book->price * $cartItem->quantity;
+            @endphp
         <li style="margin-bottom: 30px;">
             <form action="{{ route('cart.toggle') }}" method="POST">
                 @csrf
                 <input type="hidden" name="book_id" value="{{ $cartItem->book->id }}">
                 <input type="hidden" name="item_amount" value="{{ $itemAmount }}">
-                @if($cartItem->book->stock > 0)
-                    <input type="checkbox" name="cart_items" value="{{ $cartItem->book->id }}" 
-                        class="cart-checkbox" onchange="this.form.submit()"
-                        {{ in_array($cartItem->book->id, session('selected_cart_items', [])) ? 'checked' : '' }}>
-                @else
+                @if($cartItem->book->stock == 0)
                     <div style="display: flex; align-items: center;">
                         <div style="background-color: grey; width: 19px; height: 19px; border: 1px solid blue;"></div>
                         <div style="color: red; margin-left: 8px; font-weight: bold;">Out of Stock</div>
@@ -86,12 +82,31 @@
                             session(['current_total_amount' => max($currentTotal, 0)]);
                         }
                     @endphp
+                @elseif($cartItem->quantity > $cartItem->book->stock)
+                    <div style="display: flex; align-items: center;">
+                        <div style="background-color: grey; width: 19px; height: 19px; border: 1px solid blue;"></div>
+                        <div style="color: red; margin-left: 8px; font-weight: bold;">
+                            The available quantity left in stock is only {{ $cartItem->book->stock }}. Please update your quantity.</div>
+                    </div>
+                    @php
+                        $selectedItems = session('selected_cart_items', []);
+                        if (in_array($cartItem->book->id, $selectedItems)) {
+                            $selectedItems = array_diff($selectedItems, [$cartItem->book->id]);
+                            session(['selected_cart_items' => $selectedItems]);
+                            $currentTotal = session('current_total_amount', 0);
+                            $currentTotal -= $itemAmount;
+                            session(['current_total_amount' => max($currentTotal, 0)]);
+                        }
+                    @endphp
+                @elseif($cartItem->book->stock > 0)
+                    <input type="checkbox" name="cart_items" value="{{ $cartItem->book->id }}" 
+                        class="cart-checkbox" onchange="this.form.submit()"
+                        {{ in_array($cartItem->book->id, session('selected_cart_items', [])) ? 'checked' : '' }}>
                 @endif
             </form>
             <x-card>
             <h3 style="font-weight:bold">{{ $cartItem->book->title }}</h3>
             <img src="{{$cartItem->book->cover_image}}" alt="book cover" width="150" height="220"><br>
-            
             <p><strong>Quantity: {{ $cartItem->quantity }}</strong></p>
             <p><strong>Price per unit: RM{{ number_format($cartItem->book->price, 2) }}</strong></p>
             <p><strong>Amount: RM{{ number_format($itemAmount, 2) }}</strong></p>
