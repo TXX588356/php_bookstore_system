@@ -17,13 +17,6 @@ class UserController extends Controller
         $categories = Category::all();
         return view('user.index', compact('books', 'categories'));
     }
-
-    /*
-    public function getCart($user)
-    {
-        return view('user.cart', ['user' => $user]);
-    }
-    */
     
     public function viewProduct($id)
     {
@@ -33,7 +26,7 @@ class UserController extends Controller
         $book = Book::findOrFail($id);
         return view('user.show', ["book" => $book]);
     }
-
+    
     public function searchProduct(Request $request)
     {
         $keyword = $request->input('search');
