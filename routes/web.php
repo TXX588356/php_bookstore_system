@@ -39,8 +39,9 @@ Route::middleware('auth', 'can:isUser')->group(function () {
   Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
   Route::post('/cart/toggle', [CartController::class, 'toggleCartItem'])->name('cart.toggle');
   Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
-  Route::post('/checkout', [OrderController::class, 'showCheckoutPage']);
-  
+  Route::get('/checkout', [OrderController::class, 'showCheckoutPage']);
+  Route::post('/processCheckout', [OrderController::class, 'processCheckout'])->name('checkout.process');
+  Route::get('/orderHistory', [OrderController::class, 'showOrderHistory']);
 });
 
 Route::get('/books/{id}', [UserController::class, 'viewProduct']);

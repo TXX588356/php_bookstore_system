@@ -225,6 +225,10 @@
                 <a href="/cart">My Cart</a>
             </div>
 
+            <div class="nav-links">
+                <a href="/orderHistory">Order History</a>
+            </div>
+
         </nav>
     </header>
     <hr>

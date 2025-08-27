@@ -57,7 +57,7 @@
     @if(is_null($cartItems) || count($cartItems) === 0)
         <p>Your cart is empty.</p>
     @else
-    <ul>
+    <ul style="margin-bottom: 60px;">
         @foreach ($cartItems as $cartItem) 
         @php
             $itemAmount = $cartItem->book->price * $cartItem->quantity;
@@ -135,7 +135,7 @@
         @endforeach
     </ul>
 
-    <form action="/checkout" method="POST">
+    <form action="/checkout" method="GET">
         @csrf
         <div class="checkout-container">
             <strong>Total Amount: RM

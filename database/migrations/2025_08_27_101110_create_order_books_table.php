@@ -11,19 +11,17 @@ class CreateOrderBooksTable extends Migration
      *
      * @return void
      */
-    public function up()
+         public function up()
     {
         Schema::create('order_books', function (Blueprint $table) {
-            $table->id();
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('book_id');
             $table->integer('quantity');
             $table->decimal('unit_price', 8, 2);
-            $table->timestamps();
 
+            $table->primary(['order_id', 'book_id']);
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
-            $table->unique(['order_id', 'book_id']);
         });
     }
 
