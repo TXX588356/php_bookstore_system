@@ -26,11 +26,18 @@
             font-size: 16px;
         }
 
+        .action-btn {
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px;
+            height: 45px;
+        }
+
         .update-qty {
             padding: 10px;
             background-color: #a463b1;
             justify-content: center;
-            border-radius: 5px;
+            border-radius: 10px;
             color: white;
         }
 
@@ -89,30 +96,38 @@
             <p><strong>Price per unit: RM{{ number_format($cartItem->book->price, 2) }}</strong></p>
             <p><strong>Amount: RM{{ number_format($itemAmount, 2) }}</strong></p>
 
-            <div class="buttons-grp">
-                <div class="details-btn">
+            <div class="buttons-grp" style="align-items: center; gap: 15px;">
+                <div class="action-btn" style="background-color: lightyellow;">
                     <a href="/books/{{ $cartItem->book->id }}" >View Details</a>
-                    <a href="{{ route('cart.remove', ['book_id' => $cartItem->book->id]) }}"
-                    style="background-color: red; color: white;" >Remove from Cart</a>
+                </div>
+                
+                <div class="action-btn" style="background-color: red; color: white;">
+                    <form action="{{ route('cart.remove') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="book_id" value="{{ $cartItem->book->id }}">
+                        <button type="submit">Remove from Cart</button>
+                    </form>
                 </div>
 
-                <form action="{{ route('cart.update') }}" method="POST" class="flex items-center space-x-2">
-                    @csrf
-                    <input type="hidden" name="book_id" value="{{ $cartItem->book->id }}">
-                    <div class="flex items-center space-x-2">
-                        <button type="button" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600" 
-                            onclick="handleMinus( {{ $cartItem->book->id }} )">−</button>
-                        <input id="quantity-{{ $cartItem->book->id }}" class="w-8 text-center" name="quantity"
-                            value="{{ $cartItem->quantity }}" readonly>
-                        <button type="button" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-                            onclick="handlePlus( {{ $cartItem->book->id }} )">+</button>
-                    </div>
-                    <div class="update-qty">
-                         <button type="submit" class="flex items-center space-x-2">
-                            <span>Update Quantity</span>
-                        </button>
-                    </div>
-                </form>
+                <div class="action-btn" style="display: flex; align-items: center;">
+                    <form action="{{ route('cart.update') }}" method="POST" class="flex items-center space-x-2">
+                        @csrf
+                        <input type="hidden" name="book_id" value="{{ $cartItem->book->id }}">
+                        <div>
+                            <button type="button" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600" 
+                                onclick="handleMinus( {{ $cartItem->book->id }} )">-</button>
+                            <input id="quantity-{{ $cartItem->book->id }}" class="w-8 text-center" name="quantity"
+                                value="{{ $cartItem->quantity }}" readonly>
+                            <button type="button" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                                onclick="handlePlus( {{ $cartItem->book->id }} )">+</button>
+                        </div>
+                        <div class="update-qty">
+                            <button type="submit" class="flex items-center space-x-2">
+                                <span>Update Quantity</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             </x-card>

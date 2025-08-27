@@ -38,7 +38,7 @@ Route::middleware('auth', 'can:isUser')->group(function () {
   Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
   Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
   Route::post('/cart/toggle', [CartController::class, 'toggleCartItem'])->name('cart.toggle');
-  Route::get('/cart/remove/{book_id}', [CartController::class, 'remove'])->name('cart.remove');
+  Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
   Route::post('/checkout', [OrderController::class, 'showCheckoutPage']);
   
 });

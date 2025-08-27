@@ -133,7 +133,7 @@
         .buttons-grp {
             display: flex;
             gap: 10px;
-            magin: 10px 0;
+            margin: 10px 0;
         }
 
         .details-btn a {

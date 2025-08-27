@@ -14,15 +14,6 @@ class CartController extends Controller
         $userId = Auth::id();
         $cartItems = Cart::with('book')->where('user_id', $userId)->orderBy('created_at')->get();
         return view('user.cart', ['cartItems' => $cartItems]);
-    /*
-        $booksInCart = Cart::where('user_id', $userId)->orderBy('created_at')->get();
-        $books = [];
-        foreach ($booksInCart as $bookInCart) {
-            $book = Book::where('id', $bookInCart->book_id)->first();
-            $books[] = $book;
-        }
-        return view('user.cart', ['books' => $books]);
-    */
     }
 
     public function add(Request $request) {
@@ -54,27 +45,6 @@ class CartController extends Controller
         }
 
         return redirect()->back()->with('success', 'Book added to cart!');
-        
-        /*
-        //$cart = $request->session()->get('cart', []);
-
-        if(isset($cart[$bookId])) {
-            if($cart[$bookId]['quantity'] + $quantity > $book_current_stock) {
-                return redirect()->back()->with('Fail', "You are adding more than available stock");
-            } else {
-                $cart[$bookId]['quantity'] += $quantity;
-            }
-        } else {
-            $cart[$bookId] = [
-                "book_id" => $bookId,
-                "quantity" => $quantity,
-            ];
-        }
-
-        session()->put('cart', $cart);
-
-        return redirect()->back()->with('success', 'Book added to cart!');
-        */
     }
 
     public function updateQuantity(Request $request) {
@@ -122,12 +92,23 @@ class CartController extends Controller
         return redirect()->back();
     }
 
-    public function remove($book_id) {
+    public function remove(Request $request) {
         $user_id = Auth::id();
-
+        $book_id = $request->book_id;
+        $book = Book::findOrFail($book_id);
+        
         $bookInCart = Cart::where('user_id', $user_id)->where('book_id', $book_id)->first();
         if($bookInCart) {
             $bookInCart->delete();
+            // If the item to be removed is in the selected cart items, remove it from the session as well
+            $cartItems = session()->get('selected_cart_items', []);
+            if(in_array($book_id, $cartItems)) {
+                $cartItems = array_diff($cartItems, [$book_id]);
+                session()->put('selected_cart_items', $cartItems);
+            }
+            $currentTotalAmount = session()->get('current_total_amount', 0);
+            $currentTotalAmount -= $book->price * $bookInCart->quantity;
+            session()->put('current_total_amount', $currentTotalAmount);
             return redirect()->back()->with('success', 'Book removed from cart!');
         } else {
             return redirect()->back()->with('fail', 'Book not found in cart!');
