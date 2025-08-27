@@ -26,6 +26,14 @@
             font-size: 16px;
         }
 
+        .update-qty {
+            padding: 10px;
+            background-color: #a463b1;
+            justify-content: center;
+            border-radius: 5px;
+            color: white;
+        }
+
         .cart-checkbox {
             width: 20px;
             height: 20px;
@@ -39,16 +47,40 @@
         $totalAmount = 0;
     @endphp
 
-    <form action="/checkout" method="POST">
-    @csrf
+    @if(is_null($cartItems) || count($cartItems) === 0)
+        <p>Your cart is empty.</p>
+    @else
     <ul>
         @foreach ($cartItems as $cartItem) 
         @php
             $itemAmount = $cartItem->book->price * $cartItem->quantity;
         @endphp
         <li style="margin-bottom: 30px;">
-            <input type="checkbox" name="cartItems[]" value="{{ $cartItem->book->id }}" 
-                class="cart-checkbox" data-amount="{{ $itemAmount }}">
+            <form action="{{ route('cart.toggle') }}" method="POST">
+                @csrf
+                <input type="hidden" name="book_id" value="{{ $cartItem->book->id }}">
+                <input type="hidden" name="item_amount" value="{{ $itemAmount }}">
+                @if($cartItem->book->stock > 0)
+                    <input type="checkbox" name="cart_items" value="{{ $cartItem->book->id }}" 
+                        class="cart-checkbox" onchange="this.form.submit()"
+                        {{ in_array($cartItem->book->id, session('selected_cart_items', [])) ? 'checked' : '' }}>
+                @else
+                    <div style="display: flex; align-items: center;">
+                        <div style="background-color: grey; width: 19px; height: 19px; border: 1px solid blue;"></div>
+                        <div style="color: red; margin-left: 8px; font-weight: bold;">Out of Stock</div>
+                    </div>
+                    @php
+                        $selectedItems = session('selected_cart_items', []);
+                        if (in_array($cartItem->book->id, $selectedItems)) {
+                            $selectedItems = array_diff($selectedItems, [$cartItem->book->id]);
+                            session(['selected_cart_items' => $selectedItems]);
+                            $currentTotal = session('current_total_amount', 0);
+                            $currentTotal -= $itemAmount;
+                            session(['current_total_amount' => max($currentTotal, 0)]);
+                        }
+                    @endphp
+                @endif
+            </form>
             <x-card>
             <h3 style="font-weight:bold">{{ $cartItem->book->title }}</h3>
             <img src="{{$cartItem->book->cover_image}}" alt="book cover" width="150" height="220"><br>
@@ -60,51 +92,61 @@
             <div class="buttons-grp">
                 <div class="details-btn">
                     <a href="/books/{{ $cartItem->book->id }}" >View Details</a>
+                    <a href="{{ route('cart.remove', ['book_id' => $cartItem->book->id]) }}"
+                    style="background-color: red; color: white;" >Remove from Cart</a>
                 </div>
+
+                <form action="{{ route('cart.update') }}" method="POST" class="flex items-center space-x-2">
+                    @csrf
+                    <input type="hidden" name="book_id" value="{{ $cartItem->book->id }}">
+                    <div class="flex items-center space-x-2">
+                        <button type="button" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600" 
+                            onclick="handleMinus( {{ $cartItem->book->id }} )">−</button>
+                        <input id="quantity-{{ $cartItem->book->id }}" class="w-8 text-center" name="quantity"
+                            value="{{ $cartItem->quantity }}" readonly>
+                        <button type="button" class="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                            onclick="handlePlus( {{ $cartItem->book->id }} )">+</button>
+                    </div>
+                    <div class="update-qty">
+                         <button type="submit" class="flex items-center space-x-2">
+                            <span>Update Quantity</span>
+                        </button>
+                    </div>
+                </form>
             </div>
+
             </x-card>
         </li>
         @endforeach
     </ul>
-    <div class="checkout-container">
-        <span><strong>Total Amount: RM<span id="totalAmount">{{ number_format($totalAmount, 2) }}</span></strong></span>
-        <input type="submit" value="Checkout" class="checkout-btn">
-    </div>
+
+    <form action="/checkout" method="POST">
+        @csrf
+        <div class="checkout-container">
+            <strong>Total Amount: RM
+                <span id="totalAmount">{{ number_format(session('current_total_amount', 0), 2) }}</span>
+            </strong>
+            <input type="submit" name="action" value="Checkout" class="checkout-btn">
+        </div>
     </form>
-
+    @endif
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkboxes = document.querySelectorAll('.cart-checkbox');
-            const totalAmountSpan = document.getElementById('totalAmount');
-            const form = document.querySelector('form');
+        function handlePlus(bookId) {
+            const quantitySpan = document.getElementById(`quantity-${bookId}`);
+            let quantity = parseInt(quantitySpan.value);
+            quantity++;
+            quantitySpan.value = quantity;
+        }
 
-            function updateTotal() {
-                let total = 0;
-                checkboxes.forEach(cb => {
-                    if (cb.checked) {
-                        total += parseFloat(cb.dataset.amount);
-                    }
-                });
-                totalAmountSpan.textContent = total.toFixed(2);
+        function handleMinus(bookId) {
+            const quantitySpan = document.getElementById(`quantity-${bookId}`);
+            let quantity = parseInt(quantitySpan.value);
+            if (quantity > 1) {
+                quantity--;
+                quantitySpan.value = quantity;
             }
-
-            checkboxes.forEach(cb => {
-                cb.addEventListener('change', updateTotal);
-            });
-
-            form.addEventListener('submit', function(e) {
-                const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
-                if (!anyChecked) {
-                    e.preventDefault();
-                    alert("Select at least an item before proceed to checkout");
-                }
-            });
-        });
+        }
     </script>
 
-    @if(session('fail'))
-        <div style="color: red; margin-top: 20px;">
-            {{ session('fail') }}
-        </div>
-    @endif
 </x-userHeader>

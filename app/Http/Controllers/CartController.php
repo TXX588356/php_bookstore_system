@@ -76,4 +76,61 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Book added to cart!');
         */
     }
+
+    public function updateQuantity(Request $request) {
+        $bookId = $request->input('book_id');
+        $newQuantity = $request->input('quantity');
+        $userId = Auth::id();
+        $book = Book::findOrFail($bookId);
+        $book_current_stock = $book->stock;
+
+        $bookInCart = Cart::where('user_id', $userId)->where('book_id', $bookId)->first();
+        if($bookInCart) {
+            if($newQuantity > $book_current_stock) {
+                $existngQty = $bookInCart->quantity;
+                return redirect()->back()->with('fail', "You are adding more than available stock. (Available stock: $book_current_stock)");
+            } else {
+                $bookInCart->quantity = $newQuantity;
+                $bookInCart->save();
+                return redirect()->back()->with('success', 'Cart quantity updated successfully!');
+            }
+        } else {
+            return redirect()->back()->with('fail', 'Book not found in cart!');
+        }
+    }
+
+    public function toggleCartItem(Request $request) {
+        $book_id = $request->book_id;
+        $book = Book::findOrFail($book_id);
+        $currentTotalAmount = session()->get('current_total_amount', 0);
+        $cartItems = session()->get('selected_cart_items', []);
+
+        if($request->has('cart_items')) {
+            // Add item to selected cart items
+            if (!in_array($book_id, $cartItems)) {
+                $cartItems[] = $book_id;
+                $currentTotalAmount += $request->item_amount;
+            }
+        } else {
+            // Remove item from selected cart items
+            $cartItems = array_diff($cartItems, [$book_id]);
+            $currentTotalAmount -= $request->item_amount;
+        }
+    
+        session()->put('selected_cart_items', $cartItems);
+        session()->put('current_total_amount', $currentTotalAmount);
+        return redirect()->back();
+    }
+
+    public function remove($book_id) {
+        $user_id = Auth::id();
+
+        $bookInCart = Cart::where('user_id', $user_id)->where('book_id', $book_id)->first();
+        if($bookInCart) {
+            $bookInCart->delete();
+            return redirect()->back()->with('success', 'Book removed from cart!');
+        } else {
+            return redirect()->back()->with('fail', 'Book not found in cart!');
+        }
+    }
 }

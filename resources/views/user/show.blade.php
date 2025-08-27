@@ -58,10 +58,16 @@
                         @csrf
                         <input type="hidden" name="book_id" value="{{ $book->id }}">
                         <input type="hidden" name="quantity" id="quantityInput" value="1">
-                        <button type="submit" class="flex items-center space-x-2">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                            <span>Add to Cart</span>
-                        </button>
+                        @if ($book->stock == 0)
+                            <button type="button" disabled class="flex items-center space-x-2">
+                                <span style="color: red; font-weight: bold;">Out of Stock</span>
+                            </button>
+                        @else
+                            <button type="submit" class="flex items-center space-x-2">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span>Add to Cart</span>
+                            </button>
+                        @endif
                     </form>
                 </div>
             </div>

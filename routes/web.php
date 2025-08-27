@@ -3,14 +3,15 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+
 Route::get('/', [UserController::class, 'index']); //entry point
 Auth::routes();
-
 
 Route::middleware('can:isAdmin')->group(function() {
   Route::get('/admin/books/index', [BookController::class, 'index']);
@@ -22,8 +23,6 @@ Route::middleware('can:isAdmin')->group(function() {
   Route::post('/admin/books/updateBook', [BookController::class, 'updateBook']);
 
 });
-
-
 
 //Route::get('/index', [UserController::class, 'index']);
 
@@ -37,6 +36,9 @@ Auth::routes();
 Route::middleware('auth', 'can:isUser')->group(function () {
   Route::get('/cart', [CartController::class, 'show']);
   Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+  Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
+  Route::post('/cart/toggle', [CartController::class, 'toggleCartItem'])->name('cart.toggle');
+  Route::get('/cart/remove/{book_id}', [CartController::class, 'remove'])->name('cart.remove');
   Route::post('/checkout', [OrderController::class, 'showCheckoutPage']);
   
 });
