@@ -55,13 +55,21 @@ class CartController extends Controller
         $book_current_stock = $book->stock;
 
         $bookInCart = Cart::where('user_id', $userId)->where('book_id', $bookId)->first();
+        $existngQty = $bookInCart->quantity;
         if($bookInCart) {
             if($newQuantity > $book_current_stock) {
-                $existngQty = $bookInCart->quantity;
                 return redirect()->back()->with('fail', "You are adding more than available stock. (Available stock: $book_current_stock)");
             } else {
                 $bookInCart->quantity = $newQuantity;
                 $bookInCart->save();
+                // update total amount if the item is currently selected for checkout
+                if(in_array($bookId, session()->get('selected_cart_items', []))) {
+                    $currentTotalAmount = session()->get('current_total_amount', 0);
+                    $previousAmount = $book->price * $existngQty;
+                    $newAmount = $book->price * $newQuantity;
+                    $currentTotalAmount = $currentTotalAmount - $previousAmount + $newAmount;
+                    session()->put('current_total_amount', $currentTotalAmount);
+                }
                 return redirect()->back()->with('success', 'Cart quantity updated successfully!');
             }
         } else {
