@@ -60,7 +60,7 @@
                         <input type="hidden" name="quantity" id="quantityInput" value="1">
                         @if ($book->stock == 0)
                             <button type="button" disabled class="flex items-center space-x-2">
-                                <span style="color: red; font-weight: bold;">Out of Stock</span>
+                                <span style="color: #ff4c4c; font-weight: bold;">Out of Stock</span>
                             </button>
                         @else
                             <button type="submit" class="flex items-center space-x-2">
