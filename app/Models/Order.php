@@ -12,6 +12,10 @@ class Order extends Model
     public $timestamps = false;
     protected $fillable = ['user_id', 'total_amount', 'purchase_at'];
 
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
     public function orderBooks()
     {
         return $this->hasMany(OrderBook::class);

@@ -1,11 +1,12 @@
 <x-userHeader>
     <h2>Order History</h2>
+
     @if(is_null($orders) || count($orders) === 0)
         <p>Your order history is empty.</p>
     @else
         <ul>
         @foreach ($orders as $order) 
-            <li style="margin-bottom: 30px;">
+            <li style="margin-bottom: 30px; border: 1px solid grey; border-radius: 8px;">
                 <x-card>
                     <h3 style="font-weight:bold">Order ID: {{ $order->id }}</h3>
                     <h4 style="font-weight:bold">Purchase Date: {{ date('d M Y, H:i', strtotime($order->purchase_at)) }}</h4>

@@ -58,5 +58,10 @@ class OrderController extends Controller
         $orders = Order::where('user_id', $userId)->with(['orderBooks.book'])->orderBy('purchase_at', 'desc')->paginate(5);
         return view('user.order', ['orders' => $orders]);
     }
+
+    public function showSalesHistory() {
+        $orders = Order::with(['orderBooks.book', 'user'])->orderBy('purchase_at', 'desc')->paginate(5);
+        return view('admin.sales', ['orders' => $orders]);
+    }
 }
 

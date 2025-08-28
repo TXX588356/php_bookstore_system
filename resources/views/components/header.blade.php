@@ -202,6 +202,7 @@
             <div class="nav-links">
                 <a href="/admin/books/index">All Books</a>
                 <a href="/admin/books/create">Create New Book</a>
+                <a href="/admin/sales">View Sales History</a>
             </div>
 
         </nav>
