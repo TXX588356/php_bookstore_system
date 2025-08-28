@@ -126,6 +126,7 @@
             padding: 10px;
             border-radius: 10px;
             margin: 10px;
+            display: block;
         }
 
         .buttons-grp {
@@ -201,8 +202,15 @@
             @endauth
             <div class="nav-links">
                 <a href="/admin/books/index">All Books</a>
+                
+                
+            </div>
+            <div class="nav-links">
                 <a href="/admin/books/create">Create New Book</a>
-                <a href="/admin/sales">View Sales History</a>
+            </div>
+
+            <div class="nav-links">
+               <a href="/admin/sales">View Sales History</a>
             </div>
 
         </nav>
