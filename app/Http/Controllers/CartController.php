@@ -14,6 +14,11 @@ class CartController extends Controller
         $userId = Auth::id();
         $cartItems = Cart::with('book')->where('user_id', $userId)->orderBy('created_at')->get();
 
+        foreach ($cartItems as $item) {
+            $this->authorize('view', $item);  // ensure user can only view their own cart items
+        }
+
+        // Validate selected items against stock and calculate current total
         $selectedItems = session()->get('selected_cart_items', []);
         $currentTotal = 0;
         foreach ($cartItems as $item) {
@@ -48,6 +53,7 @@ class CartController extends Controller
                 'You are adding more than available stock. The existing quantity in your cart is '.$existngQty.'.
                 You can only add '.($book_current_stock - $existngQty).' more.');
             } else {
+                $this->authorize('update', $bookInCart);  // ensure user can only update their own cart items
                 $bookInCart->quantity += $quantity;
                 $bookInCart->save();
             }
@@ -56,6 +62,7 @@ class CartController extends Controller
             if($quantity > $book_current_stock) {
                 return redirect()->back()->with('fail', "You are adding more than available stock");
             } else {
+                $this->authorize('create', Cart::class);  // only normal user can add items to cart
                 Cart::create(['user_id' => $userId, 'book_id' => $bookId, 'quantity' => $quantity]);
             }
         }
@@ -76,6 +83,7 @@ class CartController extends Controller
             if($newQuantity > $book_current_stock) {
                 return redirect('/cart')->with('fail', "You are adding more than available stock. (Available stock: $book_current_stock)");
             } else {
+                $this->authorize('update', $bookInCart);  // ensure user can only update their own cart items
                 $bookInCart->quantity = $newQuantity;
                 $bookInCart->save();
                 return redirect('/cart')->with('success', 'Cart quantity updated successfully!');
@@ -111,6 +119,7 @@ class CartController extends Controller
         
         $bookInCart = Cart::where('user_id', $user_id)->where('book_id', $book_id)->first();
         if($bookInCart) {
+            $this->authorize('delete', $bookInCart);  // ensure user can only delete their own cart items
             $bookInCart->delete();
             // If the item to be removed is in the selected cart items, remove it from the session as well
             $cartItems = session()->get('selected_cart_items', []);
