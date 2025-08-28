@@ -17,4 +17,15 @@ class Book extends Model
     public function cart() {
         return $this->hasMany(Cart::class);
     }
+
+    // Boot method to handle cascading delete
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($book) {
+            // Delete all cart entries related to this book
+            $book->cart()->delete();
+        });
+    }
 }

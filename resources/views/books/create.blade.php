@@ -47,7 +47,7 @@
   
     <div class="mb-5">
         <label for="cover_image" class="block mb-2 text-sm font-medium text-gray-900">Book Cover Image Link (temporarily use url link):</label>
-        <input type="text" id="cover_image" name="cover_image" value="{{ old('cover_image') }}" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light">
+        <input type="text" id="cover_image" name="cover_image" value="{{ old('cover_image') }}" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light">
         <span style="color:red">@error('cover_image'){{$message}}@enderror</span><br>  
       </div>
 
