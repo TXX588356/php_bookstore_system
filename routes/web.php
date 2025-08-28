@@ -21,7 +21,6 @@ Route::middleware('can:isAdmin')->group(function() {
   Route::get('/admin/books/delete/{id}', [BookController::class, 'destroy']);
   Route::get('/admin/books/update/{id}', [BookController::class, 'updateBookView']);
   Route::post('/admin/books/updateBook', [BookController::class, 'updateBook']);
-
 });
 
 Route::get('/search', [UserController::class, 'searchProduct']);

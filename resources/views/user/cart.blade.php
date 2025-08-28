@@ -63,38 +63,17 @@
                 <form action="{{ route('cart.toggle') }}" method="POST">
                     @csrf
                     <input type="hidden" name="book_id" value="{{ $cartItem->book->id }}">
-                    <input type="hidden" name="item_amount" value="{{ $itemAmount }}">
                     @if($cartItem->book->stock == 0)
                         <div style="display: flex; align-items: center;">
                             <div style="background-color: grey; width: 19px; height: 19px; border: 1px solid blue;"></div>
                             <div style="color: red; margin-left: 8px; font-weight: bold;">Out of Stock</div>
                         </div>
-                        @php
-                            $selectedItems = session('selected_cart_items', []);
-                            if (in_array($cartItem->book->id, $selectedItems)) {
-                                $selectedItems = array_diff($selectedItems, [$cartItem->book->id]);
-                                session(['selected_cart_items' => $selectedItems]);
-                                $currentTotal = session('current_total_amount', 0);
-                                $currentTotal -= $itemAmount;
-                                session(['current_total_amount' => max($currentTotal, 0)]);
-                            }
-                        @endphp
                     @elseif($cartItem->quantity > $cartItem->book->stock)
                         <div style="display: flex; align-items: center;">
                             <div style="background-color: grey; width: 19px; height: 19px; border: 1px solid blue;"></div>
                             <div style="color: red; margin-left: 8px; font-weight: bold;">
                                 The available quantity left in stock is only {{ $cartItem->book->stock }}. Please update your quantity.</div>
                         </div>
-                        @php
-                            $selectedItems = session('selected_cart_items', []);
-                            if (in_array($cartItem->book->id, $selectedItems)) {
-                                $selectedItems = array_diff($selectedItems, [$cartItem->book->id]);
-                                session(['selected_cart_items' => $selectedItems]);
-                                $currentTotal = session('current_total_amount', 0);
-                                $currentTotal -= $itemAmount;
-                                session(['current_total_amount' => max($currentTotal, 0)]);
-                            }
-                        @endphp
                     @elseif($cartItem->book->stock > 0)
                         <input type="checkbox" name="cart_items" value="{{ $cartItem->book->id }}" 
                             class="cart-checkbox" onchange="this.form.submit()"
@@ -149,6 +128,7 @@
     
         <form action="/checkout" method="GET">
             @csrf
+            <input type="hidden" name="total_amount" value="{{ $currentTotal }}">
             <div class="checkout-container">
                 <strong>Total Amount: RM
                     <span id="totalAmount">{{ number_format($currentTotal, 2) }}</span>

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    
+
     public function show() {
         $userId = Auth::id();
         $cartItems = Cart::with('book')->where('user_id', $userId)->orderBy('created_at')->get();
@@ -18,7 +18,14 @@ class CartController extends Controller
         $currentTotal = 0;
         foreach ($cartItems as $item) {
             if (in_array($item->book_id, $selectedItems)) {
-                $currentTotal += $item->book->price * $item->quantity;
+                if ($item->book->stock == 0 || $item->quantity > $item->book->stock) {
+                    // If the book is out of stock or quantity exceeds stock, remove it from selected items
+                    $selectedItems = array_diff($selectedItems, [$item->book_id]);
+                    session()->put('selected_cart_items', $selectedItems);
+                } else {
+                    // Calculate the current total of the selected items
+                    $currentTotal += $item->book->price * $item->quantity;
+                }
             }
         }
 
@@ -67,46 +74,34 @@ class CartController extends Controller
         $existngQty = $bookInCart->quantity;
         if($bookInCart) {
             if($newQuantity > $book_current_stock) {
-                return redirect()->back()->with('fail', "You are adding more than available stock. (Available stock: $book_current_stock)");
+                return redirect('/cart')->with('fail', "You are adding more than available stock. (Available stock: $book_current_stock)");
             } else {
                 $bookInCart->quantity = $newQuantity;
                 $bookInCart->save();
-                // update total amount if the item is currently selected for checkout
-                if(in_array($bookId, session()->get('selected_cart_items', []))) {
-                    $currentTotalAmount = session()->get('current_total_amount', 0);
-                    $previousAmount = $book->price * $existngQty;
-                    $newAmount = $book->price * $newQuantity;
-                    $currentTotalAmount = $currentTotalAmount - $previousAmount + $newAmount;
-                    session()->put('current_total_amount', $currentTotalAmount);
-                }
-                return redirect()->back()->with('success', 'Cart quantity updated successfully!');
+                return redirect('/cart')->with('success', 'Cart quantity updated successfully!');
             }
         } else {
-            return redirect()->back()->with('fail', 'Book not found in cart!');
+            return redirect('/cart')->with('fail', 'Book not found in cart!');
         }
     }
 
     public function toggleCartItem(Request $request) {
         $book_id = $request->book_id;
         $book = Book::findOrFail($book_id);
-        $currentTotalAmount = session()->get('current_total_amount', 0);
         $cartItems = session()->get('selected_cart_items', []);
 
         if($request->has('cart_items')) {
             // Add item to selected cart items
             if (!in_array($book_id, $cartItems)) {
                 $cartItems[] = $book_id;
-                $currentTotalAmount += $request->item_amount;
             }
         } else {
             // Remove item from selected cart items
             $cartItems = array_diff($cartItems, [$book_id]);
-            $currentTotalAmount -= $request->item_amount;
         }
     
         session()->put('selected_cart_items', $cartItems);
-        session()->put('current_total_amount', $currentTotalAmount);
-        return redirect()->back();
+        return redirect('/cart');
     }
 
     public function remove(Request $request) {
@@ -123,12 +118,9 @@ class CartController extends Controller
                 $cartItems = array_diff($cartItems, [$book_id]);
                 session()->put('selected_cart_items', $cartItems);
             }
-            $currentTotalAmount = session()->get('current_total_amount', 0);
-            $currentTotalAmount -= $book->price * $bookInCart->quantity;
-            session()->put('current_total_amount', $currentTotalAmount);
-            return redirect()->back()->with('success', 'Book removed from cart!');
+            return redirect('/cart')->with('success', 'Book removed from cart!');
         } else {
-            return redirect()->back()->with('fail', 'Book not found in cart!');
+            return redirect('/cart')->with('fail', 'Book not found in cart!');
         }
     }
 }
