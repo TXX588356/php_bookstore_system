@@ -24,6 +24,9 @@ class Book extends Model
         parent::boot();
 
         static::deleting(function ($book) {
+            // Detach all categories related to this book
+            $book->categories()->detach();
+
             // Delete all cart entries related to this book
             $book->cart()->delete();
         });
