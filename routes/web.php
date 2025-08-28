@@ -13,7 +13,7 @@ use App\Http\Controllers\Auth\RegisterController;
 Route::get('/', [UserController::class, 'index']); //entry point
 Auth::routes();
 
-Route::middleware('can:isAdmin')->group(function() {
+Route::middleware(['can:isAdmin'])->group(function() {
   Route::get('/admin/books/index', [BookController::class, 'index']);
   Route::get('/admin/books/create', [BookController::class, 'create']);
   Route::get('/admin/books/{id}', [BookController::class, 'show']);
@@ -21,7 +21,7 @@ Route::middleware('can:isAdmin')->group(function() {
   Route::get('/admin/books/delete/{id}', [BookController::class, 'destroy']);
   Route::get('/admin/books/update/{id}', [BookController::class, 'updateBookView']);
   Route::post('/admin/books/updateBook', [BookController::class, 'updateBook']);
-
+  Route::get('/admin/sales', [OrderController::class, 'showSalesHistory']);
 });
 
 Route::get('/search', [UserController::class, 'searchProduct']);
@@ -31,7 +31,7 @@ Route::get('logout', [LoginController::class,'logout']);
 
 Auth::routes();
 
-Route::middleware('auth', 'can:isUser')->group(function () {
+Route::middleware(['auth', 'can:isUser'])->group(function () {
   Route::get('/cart', [CartController::class, 'show']);
   Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
   Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');

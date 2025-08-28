@@ -1,5 +1,5 @@
 @php
-    $totalAmount = number_format(session('current_total_amount', 0), 2);
+    $totalAmount = number_format(session('total_amount', 0), 2);
 @endphp
 
 <x-userHeader>

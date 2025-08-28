@@ -9,6 +9,7 @@ class OrderBook extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
     public $incrementing = false;
     protected $primaryKey = ['order_id', 'book_id'];
     protected $fillable = ['order_id', 'book_id', 'quantity', 'unit_price'];
@@ -16,5 +17,9 @@ class OrderBook extends Model
     public function book()
     {
         return $this->belongsTo(Book::class);
+    }
+
+    public function order() {
+        return $this->belongsTo(Order::class);
     }
 }
