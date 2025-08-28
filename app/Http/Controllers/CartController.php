@@ -9,11 +9,20 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-
+    
     public function show() {
         $userId = Auth::id();
         $cartItems = Cart::with('book')->where('user_id', $userId)->orderBy('created_at')->get();
-        return view('user.cart', ['cartItems' => $cartItems]);
+
+        $selectedItems = session()->get('selected_cart_items', []);
+        $currentTotal = 0;
+        foreach ($cartItems as $item) {
+            if (in_array($item->book_id, $selectedItems)) {
+                $currentTotal += $item->book->price * $item->quantity;
+            }
+        }
+
+        return view('user.cart', ['cartItems' => $cartItems, 'currentTotal' => $currentTotal]);
     }
 
     public function add(Request $request) {
