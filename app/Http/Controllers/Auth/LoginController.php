@@ -57,10 +57,10 @@ class LoginController extends Controller
     
     protected function authenticated(Request $req, $user) {
         if($user->role === 'admin') {
-            return redirect('/admin/books/index');
+             return redirect()->intended('/admin/books/index');
         }
 
-        return redirect('/');
+        return redirect()->intended('/');
     }
 
     
