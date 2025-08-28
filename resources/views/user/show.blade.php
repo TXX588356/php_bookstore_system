@@ -27,7 +27,7 @@
 
 
     <div class="book-details-container">
-        <img src="{{ $book->cover_image }}" alt="book cover" width="400" height="500"><br>
+        <img src="{{ asset('storage/' . $book['cover_image']) }}" alt="book cover" width="400" height="500"><br>
         <div class="inner-container">
             <p><strong>Author: </strong>{{ $book->author }}</p>
             <p><strong>Description: </strong>{{ $book->desc }}</p>
@@ -60,7 +60,7 @@
                         <input type="hidden" name="quantity" id="quantityInput" value="1">
                         @if ($book->stock == 0)
                             <button type="button" disabled class="flex items-center space-x-2">
-                                <span style="color: red; font-weight: bold;">Out of Stock</span>
+                                <span style="color: #ff4c4c; font-weight: bold;">Out of Stock</span>
                             </button>
                         @else
                             <button type="submit" class="flex items-center space-x-2">

@@ -24,7 +24,7 @@
                 <li>
                     <x-card href="/books/{{ $book['id'] }}">
                         <h3 style="font-weight:bold">{{ $book['title'] }}</h3>
-                        <img src="{{ $book['cover_image'] }}" alt="book cover" width="150" height="220"><br>
+                        <img  src="{{ asset('storage/' . $book['cover_image']) }}" alt="book cover" width="150" height="220"><br>
 
                         <div class="buttons-grp">
                             <div class="details-btn">

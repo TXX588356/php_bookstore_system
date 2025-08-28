@@ -1,6 +1,6 @@
 <x-header>
   <title>Update Book</title>
-  <form class="w-full max-w-[800px] mx-auto px-5" action="/admin/books/updateBook" method="POST">
+  <form class="w-full max-w-[800px] mx-auto px-5" action="/admin/books/updateBook" method="POST" enctype="multipart/form-data">
     @csrf
       <input type="hidden" name="id" value={{ $book->id }}>
       <div class="mb-5">
@@ -48,7 +48,7 @@
 
       <div class="mb-5">
         <label for="cover_image" class="block mb-2 text-sm font-medium text-gray-900">Book Cover Image Link:</label>
-        <input type="text" id="cover_image" value="{{ old('cover_image', $book->cover_image) }}" name="cover_image" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light" >
+        <input type="file" id="cover_image" name="cover_image" class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light" >
         <span style="color:red">@error('cover_image'){{$message}}@enderror</span><br>  
 
       </div>
