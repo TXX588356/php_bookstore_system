@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\OrderBook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
     public function showCheckoutPage(Request $request) {
+        // Ensure there are selected items in the cart before proceeding to checkout
         if (!session()->has('selected_cart_items') || count(session('selected_cart_items')) === 0 || $request->input('total_amount') == 0) {
             return redirect()->back()->with('fail', 'No items selected for checkout. Please select items to proceed.');
         }
@@ -40,12 +42,12 @@ class OrderController extends Controller
             $unitPrice = $book->price;
             $quantity = Cart::where('book_id', $bookId)->where('user_id', $userId)->value('quantity');
             
-            DB::table('order_books')->insert(['order_id' => $orderId, 'book_id' => $bookId, 
-                'quantity' => $quantity, 'unit_price' => $unitPrice]);
-            $book->stock -= $quantity;
+            OrderBook::create(['order_id' => $orderId, 'book_id' => $bookId, 'quantity' => $quantity, 'unit_price' => $unitPrice]);
+            $book->stock -= $quantity; // Deduct the purchased quantity from stock
             $book->save();
         }       
 
+        // Clear purchased items from cart and session
         Cart::where('user_id', $userId)->whereIn('book_id', session('selected_cart_items'))->delete();
         session()->forget('selected_cart_items');
         session()->forget('total_amount');
