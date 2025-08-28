@@ -56,14 +56,5 @@ class UserController extends Controller
             return view('books.index', compact('books', 'categories')); //show different view for admin role
         }
         return view('user.index', compact('books', 'categories'));
-
-
-        /* ->orWhereHas('categories', function ($query) use ($keyword) {
-                $query->where('name', '=', $keyword);
-            }) 
-                
-            
-                     
-*/
     }
 }

@@ -8,6 +8,7 @@
     <br>
     <p>Search by Category</p>
     <ul>
+        <li style="display: inline-block"><a class="category-link" href="/">All Categories</a></li>
       @foreach($categories as $category)
         <li style="display:inline-block">
           <a class="category-link" href="/categorySearch?categorySearch={{ $category->name }}">| {{ $category->name }}</a>

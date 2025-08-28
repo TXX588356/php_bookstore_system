@@ -26,19 +26,6 @@ class BookController extends Controller
     }
 
     public function store(Request $request) {
-     
-/*       $book = new Book();
-      $book->title = $request->title;
-      $book->author = $request->author;
-      $book->desc = $request->desc;
-      $book->price = $request->price;
-      $book->stock = $request->stock;
-      $book->page_count = $request->page_count;
-      $book->publisher = $request->publisher;
-      $book->cover_image = $request->cover_image;
-      $book->save();
-      $book->categories()->sync($request->input('categories', []));   */
-      
       
       $data = $request->validate([
         'title' => 'required',

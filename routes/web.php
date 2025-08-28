@@ -24,14 +24,12 @@ Route::middleware('can:isAdmin')->group(function() {
 
 });
 
-//Route::get('/index', [UserController::class, 'index']);
-
-  Route::get('/search', [UserController::class, 'searchProduct']);
-  Route::get('/categorySearch', [UserController::class, 'searchByCategory']);
-  
+Route::get('/search', [UserController::class, 'searchProduct']);
+Route::get('/categorySearch', [UserController::class, 'searchByCategory']);
+Route::get('/books/{id}', [UserController::class, 'viewProduct']);
+Route::get('logout', [LoginController::class,'logout']);
 
 Auth::routes();
-
 
 Route::middleware('auth', 'can:isUser')->group(function () {
   Route::get('/cart', [CartController::class, 'show']);
@@ -44,9 +42,7 @@ Route::middleware('auth', 'can:isUser')->group(function () {
   Route::get('/orderHistory', [OrderController::class, 'showOrderHistory']);
 });
 
-Route::get('/books/{id}', [UserController::class, 'viewProduct']);
 
-Route::get('logout', [LoginController::class,'logout']);
 /* Route::get('/login/admin', [LoginController::class, 'showAdminLoginForm']);
 Route::get('/register/admin', [RegisterController::class,'showAdminRegisterForm']);
 
