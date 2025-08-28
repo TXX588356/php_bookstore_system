@@ -11,23 +11,42 @@
                     <h3 style="font-weight:bold">Order ID: {{ $order->id }}</h3>
                     <h4 style="font-weight:bold">Purchase Date: {{ date('d M Y, H:i', strtotime($order->purchase_at)) }}</h4>
                     <hr><br>
-                    @foreach ($order->orderBooks as $orderBook)
-                        @if ($orderBook->book === null)
-                            <h5 style="color:red;">This book in no longer available in the store.</h5>
-                            <img alt="not available" width="120" height="180"><br>
-                            <p>Quantity: {{ $orderBook->quantity }}</p>
-                            <p>Price per unit: RM{{ number_format($orderBook->unit_price, 2) }}</p>
-                            <p>Amount: RM{{ number_format($orderBook->unit_price * $orderBook->quantity, 2) }}</p>
-                        @else
-                            <h5>Title: {{ $orderBook->book->title }}</h5>
-                            <img src="{{ $orderBook->book->cover_image }}" alt="book cover" width="120" height="180"><br>
-                            <p>Quantity: {{ $orderBook->quantity }}</p>
-                            <p>Price per unit: RM{{ number_format($orderBook->unit_price, 2) }}</p>
-                            <p>Amount: RM{{ number_format($orderBook->unit_price * $orderBook->quantity, 2) }}</p>
-                        @endif
-                        <hr><br>
-                    @endforeach
-                    <strong style="font-size: 1.2em;">Total Amount: RM{{ number_format($order->total_amount, 2) }}</strong>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="text-align: left; padding-right: 15px;">Book Title</th>
+                                <th style="text-align: left; padding-right: 15px;">Author</th>
+                                <th style="text-align: left; padding-right: 15px;">Price per Unit</th>
+                                <th style="text-align: left; padding-right: 15px;">Quantity</th>
+                                <th style="text-align: left; padding-right: 15px;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($order->orderBooks as $orderBook)
+                                @if ($orderBook->book === null)
+                                    <tr>
+                                        <td style="color:red; padding-top: 10px;">
+                                            This book is no longer available in the store.
+                                            <img alt="not available" width="70" height="90" style="vertical-align: middle; margin-right: 10px;">
+                                        </td>
+                                        <td style="color:red; padding-top: 10px;">N/A</td>
+                                @else
+                                    <tr>
+                                        <td style="padding-top: 10px;">
+                                            {{ $orderBook->book->title }}
+                                            <img src="{{ $orderBook->book->cover_image }}" alt="book cover" width="70" height="90" style="vertical-align: middle; margin-right: 10px;">
+                                        </td>
+                                        <td style="padding-top: 10px;">{{ $orderBook->book->author }}</td>
+                                @endif
+                                        <td style="padding-top: 10px;">RM{{ number_format($orderBook->unit_price, 2) }}</td>
+                                        <td style="padding-top: 10px;">{{ $orderBook->quantity }}</td>
+                                        <td style="padding-top: 10px;">RM{{ number_format($orderBook->unit_price * $orderBook->quantity, 2) }}</td>
+                                    </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <br><hr><br>
+                    <strong style="font-size: 1.3em;">Total Amount: RM{{ number_format($order->total_amount, 2) }}</strong>
                 </x-card>
             </li>
         @endforeach
