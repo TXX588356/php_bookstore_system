@@ -61,7 +61,7 @@ class BookController extends Controller
       $this->authorize('delete', $book); // only admin can delete books
       $book->delete();
 
-      return redirect('/admin/books/index')->with('success', 'Book Deleted!');;
+      return redirect('/admin/books/index')->with('success', 'Book Deleted!');
     }
 
     public function updateBookView($id) {
