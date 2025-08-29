@@ -100,6 +100,10 @@ class BookSeeder extends Seeder
         ],
         
     ]);
+
+
+    /*
+    // This cannot be run for PHP 8.0 or below due to the nullsafe operator (->?)
     Book::find(1)?->categories()->attach([1, 3, 7, 8]);
     Book::find(2)?->categories()->attach([3, 8, 11]);
     Book::find(3)?->categories()->attach([6]);
@@ -108,5 +112,24 @@ class BookSeeder extends Seeder
     Book::find(6)?->categories()->attach([1, 3, 7, 8, 11, 14]);
     Book::find(7)?->categories()->attach([3, 5, 8, 11]);
     Book::find(8)?->categories()->attach([12, 13, 14]);
+    */
+
+    $bookCategories = [
+        1 => [1, 3, 7, 8],
+        2 => [3, 8, 11],
+        3 => [6],
+        4 => [3, 6, 8],
+        5 => [3, 6, 8, 11],
+        6 => [1, 3, 7, 8, 11, 14],
+        7 => [3, 5, 8, 11],
+        8 => [12, 13, 14],
+    ];
+
+    foreach ($bookCategories as $bookId => $categories) {
+        if ($book = Book::find($bookId)) {
+            $book->categories()->attach($categories);
+        }
+    }
+
     }
 }
