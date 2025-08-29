@@ -82,7 +82,7 @@
                 </form>
                 <x-card>
                 <h3 style="font-weight:bold">{{ $cartItem->book->title }}</h3>
-                <img src="{{$cartItem->book->cover_image}}" alt="book cover" width="150" height="220"><br>
+                <img src="{{ asset('storage/' . $cartItem->book->cover_image) }}" alt="book cover" width="150" height="220"><br>
                 <p><strong>Quantity: {{ $cartItem->quantity }}</strong></p>
                 <p><strong>Price per unit: RM{{ number_format($cartItem->book->price, 2) }}</strong></p>
                 <p><strong>Amount: RM{{ number_format($itemAmount, 2) }}</strong></p>

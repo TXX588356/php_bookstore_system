@@ -42,7 +42,7 @@
                                     <tr>
                                         <td style="padding-top: 10px;">
                                             {{ $orderBook->book->title }}
-                                            <img src="{{ $orderBook->book->cover_image }}" alt="book cover" width="70" height="90" style="vertical-align: middle; margin-right: 10px;">
+                                            <img src="{{ asset('storage/' . $orderBook->book->cover_image) }}" alt="book cover" width="70" height="90" style="vertical-align: middle; margin-right: 10px;">
                                         </td>
                                         <td style="padding-top: 10px;">{{ $orderBook->book->author }}</td>
                                     

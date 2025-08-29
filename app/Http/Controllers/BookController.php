@@ -38,11 +38,15 @@ class BookController extends Controller
         'stock' => 'required|integer|min:1',
         'page_count' => 'required|integer|min:1',
         'publisher' => 'required',
-        'cover_image' => 'required',
+        'cover_image' => 'required|file|mimes:pdf,jpg,png|max:2048',
         'categories' => 'required|array|min:1',
         'categories.*' => 'exists:categories,id',
       ]);
 
+      $file = $request->file('cover_image');
+      $path = $file->store('uploads', 'public'); //store the uploaded file to this dir
+
+      $data['cover_image'] = $path;
       $this->authorize('create', Book::class); // only admin can create books
       $book = Book::create($data);
 
@@ -80,11 +84,20 @@ class BookController extends Controller
         'stock' => 'required|integer|min:1',
         'page_count' => 'required|integer|min:1',
         'publisher' => 'required',
-        'cover_image' => 'required',
+        'cover_image' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
         'categories' => 'required|array|min:1',
         'categories.*' => 'exists:categories,id',
       ]);
 
+
+      if ($request->hasFile('cover_image')) {
+        $file = $request->file('cover_image');
+        $path = $file->store('uploads', 'public');
+        $data['cover_image'] = $path;
+    } else {
+        //peserve the existing image if no new file is uploaded
+        $data['cover_image'] = $book->cover_image;
+    }
       $book->update($data);
 
       $book->categories()->sync($data['categories']);
