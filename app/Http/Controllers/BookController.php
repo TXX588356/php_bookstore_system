@@ -44,9 +44,10 @@ class BookController extends Controller
       ]);
 
       $file = $request->file('cover_image');
-      $path = $file->store('uploads', 'public'); //store the uploaded file to this dir
-
-      $data['cover_image'] = $path;
+      $filename = $file->getClientOriginalName();
+      $destinationPath = public_path('book_cover_images');
+      $file->move($destinationPath, $filename);
+      $data['cover_image'] = 'book_cover_images/' . $filename;
       $this->authorize('create', Book::class); // only admin can create books
       $book = Book::create($data);
 
@@ -92,8 +93,10 @@ class BookController extends Controller
 
       if ($request->hasFile('cover_image')) {
         $file = $request->file('cover_image');
-        $path = $file->store('uploads', 'public');
-        $data['cover_image'] = $path;
+        $filename = $file->getClientOriginalName();
+        $destinationPath = public_path('book_cover_images');
+        $file->move($destinationPath, $filename);
+        $data['cover_image'] = 'book_cover_images/' . $filename;
     } else {
         //peserve the existing image if no new file is uploaded
         $data['cover_image'] = $book->cover_image;
