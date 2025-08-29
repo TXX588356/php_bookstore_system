@@ -34,5 +34,5 @@
             </li>
         @endforeach
     </ul>
-    {{ $books->links() }}
+      {{ $books->appends(request()->except('page'))->links() }}
 </x-userHeader>

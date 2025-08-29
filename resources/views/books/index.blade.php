@@ -42,5 +42,5 @@
             @endforeach
           @endif
     </ul>
-    {{ $books->links() }}
+    {{ $books->appends(request()->except('page'))->links() }}
 </x-header>
