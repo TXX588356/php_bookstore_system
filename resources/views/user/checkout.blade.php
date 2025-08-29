@@ -40,7 +40,7 @@
             <li>
                 <x-card>
                     <h3 style="font-weight:bold">{{ $item->book->title }}</h3>
-                    <img src=" {{asset('storage/' . $item->book->cover_image) }}" alt="book cover" width="150" height="220"><br>
+                    <img src=" {{ asset($item->book->cover_image) }}" alt="book cover" width="150" height="220"><br>
                     <p><strong>Quantity: {{ $item->quantity }}</strong></p>
                     <p><strong>Price per unit: RM{{ number_format($item->book->price, 2) }}</strong></p>
                     <p><strong>Amount: RM{{ number_format($item->book->price * $item->quantity, 2) }}</strong></p>  
