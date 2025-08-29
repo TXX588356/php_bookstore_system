@@ -15,10 +15,22 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        /* for($i=0;$i<3;$i++) {
-            DB::table('categories')->insert([
-                'name' => Str::random(15),
-            ]);
-        }   */
+        DB::table('categories')->insert([
+            ['name' => 'Comics'],
+            ['name' => 'Education'],
+            ['name' => 'Fiction'],
+            ['name' => 'Non-fiction'],
+            ['name' => 'Childrens'],
+            ['name' => 'Romance'],
+            ['name' => 'Graphic Novels'],
+            ['name' => 'Fantasy'],
+            ['name' => 'Mystery'],
+            ['name' => 'Biography'],
+            ['name' => 'Adventure'],
+            ['name' => 'Psychology'],
+            ['name' => 'Business'],
+            ['name' => 'Personal Development'],
+            ['name' => 'Travel'],
+        ]);
     }
 }
