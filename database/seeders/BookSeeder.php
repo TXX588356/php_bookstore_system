@@ -101,12 +101,12 @@ class BookSeeder extends Seeder
         
     ]);
     Book::find(1)?->categories()->attach([1, 3, 7, 8]);
-    Book::find(2)?->categories()->attach([3, 4, 8, 6]);
+    Book::find(2)?->categories()->attach([3, 8, 11]);
     Book::find(3)?->categories()->attach([6]);
-    Book::find(4)?->categories()->attach([3, 4, 8]);
-    Book::find(5)?->categories()->attach([3, 4, 8]);
-    Book::find(6)?->categories()->attach([3, 4, 8]);
-    Book::find(7)?->categories()->attach([3, 4, 8]);
+    Book::find(4)?->categories()->attach([3, 6, 8]);
+    Book::find(5)?->categories()->attach([3, 6, 8, 11]);
+    Book::find(6)?->categories()->attach([1, 3, 7, 8, 11, 14]);
+    Book::find(7)?->categories()->attach([3, 5, 8, 11]);
     Book::find(8)?->categories()->attach([12, 13, 14]);
     }
 }

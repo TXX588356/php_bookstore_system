@@ -57,4 +57,37 @@ class UserController extends Controller
         }
         return view('user.index', compact('books', 'categories'));
     }
+
+    public function sortByPrice(Request $request) {
+        $keyword = $request->input('sortPrice');
+
+        if($keyword === "LessThan5") {
+            $books = Book::where('price', '<', 5)->paginate(5);
+        } else {
+            $books = Book::where('price', '>', 5)->paginate(5);
+        }
+        $categories = Category::all();
+
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            return view('books.index', compact('books', 'categories')); //show different view for admin role
+        }
+        return view('user.index', compact('books', 'categories'));
+    }
+
+    public function sortByAlphabet(Request $request) {
+        $keyword = $request->input('sortByAlphabet');
+
+        if($keyword === "asc") {
+            $books = Book::orderBy('title', 'asc')->paginate(5);
+        } else {
+            $books = Book::orderBy('title', 'desc')->paginate(5);
+        }
+        $categories = Category::all();
+
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            return view('books.index', compact('books', 'categories')); //show different view for admin role
+        }
+        return view('user.index', compact('books', 'categories'));
+    }
+    
 }
