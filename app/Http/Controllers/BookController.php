@@ -106,5 +106,7 @@ class BookController extends Controller
       $book->categories()->sync($data['categories']);
       return redirect('/admin/books/index')->with('success', 'Book Edited!');
     }
+
+    
   
 }
